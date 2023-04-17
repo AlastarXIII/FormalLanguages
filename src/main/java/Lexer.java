@@ -17,6 +17,7 @@ public class Lexer {
     }
 
     public Token nextToken() throws IOException {
+        value = 0;
         switch (current){
             case '+':
                 consume();
@@ -46,8 +47,11 @@ public class Lexer {
             case '8':
             case '9':
             case '0':
-                value = Character.getNumericValue(current);
-                consume();
+                do {
+                    value *= 10;
+                    value += Character.getNumericValue(current);
+                    consume();
+                } while (Character.isDigit(current));
                 return Token.NUMBER;
             case (char) -1:
                 return Token.EOF;
