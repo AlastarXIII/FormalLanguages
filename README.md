@@ -7,8 +7,8 @@ The grammar for this project goes as follows:
 
 >expr -> div {'+'|'-' div}  
 >div  -> mul {'/' mul}  
->mul  -> num {'*' num}  
->operand  -> term | '(' expr ')' | '-' operand  
+>mul  -> operand {'*' operand}  
+>operand  -> digit | '(' expr ')' | '-' operand  
 >digit  -> '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | {digit}
 
 It's easy to notice that multiplication has higher priority than division (unlike the equal priority for substraction and addition). That's the only difference in this calculator's operation priority.  
