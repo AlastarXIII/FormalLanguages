@@ -70,7 +70,7 @@ public class Parser {
             }
             case MINUS -> {
                 consume();
-                value = -term();
+                value = -num();
             }
             case EOF -> throw new CalculatorException("Expression is incomplete.");
         }
@@ -81,12 +81,6 @@ public class Parser {
     private int term(){
         int value = lexer.getValue();
         consume();
-
-        while (symbol == Token.NUMBER){
-            value *= 10;
-            value += lexer.getValue();
-            consume();
-        }
 
         return value;
     }

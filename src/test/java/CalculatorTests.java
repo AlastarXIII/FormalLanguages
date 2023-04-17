@@ -168,4 +168,24 @@ public class CalculatorTests {
         Assertions.assertNotEquals(null, thrown, "Exception wasn't triggered.");
         Assertions.assertEquals("Expression is incomplete.", thrown.getMessage(), "Wrong exception was triggered.");
     }
+
+    @Test
+    void testParser_UnaryMinusBeforeParentheses_ShouldMakeWholeExpressionNegative(){
+        int result = 0;
+        try {
+            File file = new File("file.txt");
+            file.createNewFile();
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            // 2 * (15 / (9 - 24))
+            bw.write("-(2*(15/((4+5)-(8*(2+1)))))");
+            bw.close();
+            result = new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
+            file.deleteOnExit();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
+        Assertions.assertEquals(2, result, "Unary minus didn't affect the parentheses.");
+    }
 }
