@@ -47,30 +47,31 @@ public class Parser {
     }
 
     private int mul(){
-        int value = num();
+        int value = operand();
 
         while (symbol == Token.MUL){
             consume();
-            value *= num();
+            value *= operand();
         }
 
         return value;
     }
 
-    private int num(){
+    private int operand(){
         int value = 0;
 
         switch (symbol) {
-            case NUMBER -> value = term();
+            case NUMBER -> value = digit();
             case LPAR -> {
                 consume();
                 value = expr();
-                match(Token.RPAR);
+                if(symbol != Token.RPAR)
+                    throw new CalculatorException("No matching parenthesis found.");
                 consume();
             }
             case MINUS -> {
                 consume();
-                value = -num();
+                value = -operand();
             }
             case EOF -> throw new CalculatorException("Expression is incomplete.");
         }
@@ -78,16 +79,11 @@ public class Parser {
         return value;
     }
 
-    private int term(){
+    private int digit(){
         int value = lexer.getValue();
         consume();
 
         return value;
-    }
-
-    private void match(Token expectedSymbol){
-        if(symbol != expectedSymbol && expectedSymbol == Token.RPAR)
-            throw new CalculatorException("No matching parentheses found.");
     }
 
     private void consume(){
