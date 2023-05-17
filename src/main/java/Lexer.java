@@ -5,14 +5,16 @@ import java.io.Reader;
 public class Lexer {
 
     private char current;
-    private int value;
+    private double value;
     private final Reader input;
+    private int positionAfterDot;
 
     public Lexer(BufferedReader input) {
         if(input == null)
             throw new RuntimeException("Reader cannot be null.");
         this.input = input;
         value = 0;
+        positionAfterDot = 0;
         consume();
     }
 
@@ -43,6 +45,11 @@ public class Lexer {
             case '%':
                 consume();
                 return Token.REMAINDER;
+            case '.':
+            case ',':
+                consume();
+                positionAfterDot++;
+                return Token.DOT;
             case '1':
             case '2':
             case '3':
@@ -54,10 +61,14 @@ public class Lexer {
             case '9':
             case '0':
                 do {
-                    value *= 10;
-                    value += Character.getNumericValue(current);
+                    if(positionAfterDot == 0)
+                        value *= 10;
+                    value += Character.getNumericValue(current) / Math.pow(10, positionAfterDot);
+                    if(positionAfterDot != 0)
+                        positionAfterDot++;
                     consume();
                 } while (Character.isDigit(current));
+                positionAfterDot = 0;
                 return Token.NUMBER;
             case (char) -1:
                 return Token.EOF;
@@ -74,7 +85,7 @@ public class Lexer {
         }
     }
 
-    public int getValue(){
+    public double getValue(){
         return value;
     }
 }

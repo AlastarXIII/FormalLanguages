@@ -8,5 +8,6 @@ public enum Token {
     MINUS,
     PLUS,
     EXP,
-    REMAINDER
+    REMAINDER,
+    DOT
 }

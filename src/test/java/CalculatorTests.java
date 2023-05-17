@@ -2,21 +2,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
+@SuppressWarnings("all")
 public class CalculatorTests {
 
     @Test
     void testLexer_UnknownSymbol_ShouldThrowException(){
         IOException thrown = Assertions.assertThrows(IOException.class, () -> {
             File file = new File("file.txt");
-            boolean wasFileCreated = file.createNewFile();
-            if(!wasFileCreated)
-                Assertions.fail();
+            file.createNewFile();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("?");
             bw.close();
             new Lexer(new BufferedReader(new FileReader(file))).nextToken();
-            file.deleteOnExit();
+            file.delete();
         });
 
         Assertions.assertNotEquals(null, thrown, "Exception wasn't triggered.");
@@ -25,25 +26,23 @@ public class CalculatorTests {
 
     @Test
     void testLexer_NumberSymbol_ShouldAssignValue(){
-        int value = 0;
+        double result = 0;
         try {
             File file = new File("file.txt");
-            boolean wasFileCreated = file.createNewFile();
-            if(!wasFileCreated)
-                Assertions.fail();
+            file.createNewFile();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("5");
             bw.close();
             Lexer lexer = new Lexer(new BufferedReader(new FileReader(file)));
             lexer.nextToken();
-            value = lexer.getValue();
-            file.deleteOnExit();
+            result = lexer.getValue();
+            file.delete();
         }
         catch (IOException e){
             e.printStackTrace();
         }
 
-        Assertions.assertEquals(5, value, "Value wasn't assigned.");
+        Assertions.assertEquals(5, result, "Value wasn't assigned.");
     }
 
     @Test
@@ -59,15 +58,13 @@ public class CalculatorTests {
         Token token = null;
         try {
             File file = new File("file.txt");
-            boolean wasFileCreated = file.createNewFile();
-            if(!wasFileCreated)
-                Assertions.fail();
+            file.createNewFile();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("");
             bw.close();
             Lexer lexer = new Lexer(new BufferedReader(new FileReader(file)));
             token = lexer.nextToken();
-            file.deleteOnExit();
+            file.delete();
         }
         catch (IOException e){
             e.printStackTrace();
@@ -86,17 +83,15 @@ public class CalculatorTests {
 
     @Test
     void testParser_SimpleExpression_MultiplicationShouldHaveHigherPriorityThanDivision(){
-        int result = 0;
+        double result = 0;
         try {
             File file = new File("file.txt");
-            boolean wasFileCreated = file.createNewFile();
-            if(!wasFileCreated)
-                Assertions.fail();
+            file.createNewFile();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("6/2*3");
             bw.close();
             result = new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
-            file.deleteOnExit();
+            file.delete();
         }
         catch (IOException e){
             e.printStackTrace();
@@ -108,17 +103,15 @@ public class CalculatorTests {
 
     @Test
     void testParser_SingleParenthesesExpression_ParenthesesShouldHaveHighestPriority(){
-        int result = 0;
+        double result = 0;
         try {
             File file = new File("file.txt");
-            boolean wasFileCreated = file.createNewFile();
-            if(!wasFileCreated)
-                Assertions.fail();
+            file.createNewFile();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("9/3*(-2+5)+1");
             bw.close();
             result = new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
-            file.deleteOnExit();
+            file.delete();
         }
         catch (IOException e){
             e.printStackTrace();
@@ -129,18 +122,16 @@ public class CalculatorTests {
 
     @Test
     void testParser_MultipleParenthesesExpression_InnerParenthesesShouldHaveHighestPriority(){
-        int result = 0;
+        double result = 0;
         try {
             File file = new File("file.txt");
-            boolean wasFileCreated = file.createNewFile();
-            if(!wasFileCreated)
-                Assertions.fail();
+            file.createNewFile();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             // 2 * (15 / (9 - 24))
             bw.write("(2*(15/((4+5)-(8*(2+1)))))");
             bw.close();
             result = new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
-            file.deleteOnExit();
+            file.delete();
         }
         catch (IOException e){
             e.printStackTrace();
@@ -151,17 +142,15 @@ public class CalculatorTests {
 
     @Test
     void testParser_RemainderShouldHaveLowerPriorityThanMultiplication(){
-        int result = 0;
+        double result = 0;
         try {
             File file = new File("file.txt");
-            boolean wasFileCreated = file.createNewFile();
-            if(!wasFileCreated)
-                Assertions.fail();
+            file.createNewFile();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("24%8*(2+1)");
             bw.close();
             result = new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
-            file.deleteOnExit();
+            file.delete();
         }
         catch (IOException e){
             e.printStackTrace();
@@ -172,17 +161,15 @@ public class CalculatorTests {
 
     @Test
     void testParser_RemainderShouldHaveSamePriorityAsDivision(){
-        int result = 0;
+        double result = 0;
         try {
             File file = new File("file.txt");
-            boolean wasFileCreated = file.createNewFile();
-            if(!wasFileCreated)
-                Assertions.fail();
+            file.createNewFile();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("24/8%8/3");
             bw.close();
             result = new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
-            file.deleteOnExit();
+            file.delete();
         }
         catch (IOException e){
             e.printStackTrace();
@@ -193,17 +180,15 @@ public class CalculatorTests {
 
     @Test
     void testParser_ExponentiationShouldHaveTheHighestPriority(){
-        int result = 0;
+        double result = 0;
         try {
             File file = new File("file.txt");
-            boolean wasFileCreated = file.createNewFile();
-            if(!wasFileCreated)
-                Assertions.fail();
+            file.createNewFile();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("24/6*2^2");
             bw.close();
             result = new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
-            file.deleteOnExit();
+            file.delete();
         }
         catch (IOException e){
             e.printStackTrace();
@@ -216,14 +201,12 @@ public class CalculatorTests {
     void testParser_UnclosedParentheses_ShouldThrowCalculatorException(){
         CalculatorException thrown = Assertions.assertThrows(CalculatorException.class, () -> {
             File file = new File("file.txt");
-            boolean wasFileCreated = file.createNewFile();
-            if(!wasFileCreated)
-                Assertions.fail();
+            file.createNewFile();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("(2*(15/((4+5)-(8*(2+1))))");
             bw.close();
             new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
-            file.deleteOnExit();
+            file.delete();
         });
 
         Assertions.assertNotEquals(null, thrown, "Exception wasn't triggered.");
@@ -234,14 +217,12 @@ public class CalculatorTests {
     void testParser_IncompleteExpression_ShouldThrowCalculatorException(){
         CalculatorException thrown = Assertions.assertThrows(CalculatorException.class, () -> {
             File file = new File("file.txt");
-            boolean wasFileCreated = file.createNewFile();
-            if(!wasFileCreated)
-                Assertions.fail();
+            file.createNewFile();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("2+5*");
             bw.close();
             new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
-            file.deleteOnExit();
+            file.delete();
         });
 
         Assertions.assertNotEquals(null, thrown, "Exception wasn't triggered.");
@@ -250,23 +231,61 @@ public class CalculatorTests {
 
     @Test
     void testParser_UnaryMinusBeforeParentheses_ShouldMakeWholeExpressionNegative(){
-        int result = 0;
+        double result = 0;
         try {
             File file = new File("file.txt");
-            boolean wasFileCreated = file.createNewFile();
-            if(!wasFileCreated)
-                Assertions.fail();
+            file.createNewFile();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             // 2 * (15 / (9 - 24))
             bw.write("-(2*(15/((4+5)-(8*(2+1)))))");
             bw.close();
             result = new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
-            file.deleteOnExit();
+            file.delete();
         }
         catch (IOException e){
             e.printStackTrace();
         }
 
         Assertions.assertEquals(2, result, "Unary minus didn't affect the parentheses.");
+    }
+
+    @Test
+    void testParser_Decimals_ShouldWorkWithNonDecimals(){
+        double result = 0;
+        try {
+            File file = new File("file.txt");
+            file.createNewFile();
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            bw.write("6+3.3-1.1*2");
+            bw.close();
+            result = new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
+            file.delete();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
+        Assertions.assertEquals(7.1, new BigDecimal(result).setScale(6, RoundingMode.DOWN).doubleValue(), "Unary minus didn't affect the parentheses.");
+    }
+
+    @Test
+    void testParser_Decimals_DoubleDotShouldResultInError() {
+        double result = 0;
+        RuntimeException thrown = null;
+        try {
+            File file = new File("file.txt");
+            file.createNewFile();
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            bw.write("5.7+6.87.4");
+            bw.close();
+            thrown = Assertions.assertThrows(CalculatorException.class, () -> new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement());
+            file.delete();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
+        Assertions.assertNotEquals(null, thrown, "Exception wasn't triggered.");
+        Assertions.assertEquals("Decimals cannot have two dots.", thrown.getMessage(), "Wrong exception was triggered.");
     }
 }

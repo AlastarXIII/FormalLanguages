@@ -11,13 +11,13 @@ public class Parser {
         this.lexer = lexer;
     }
 
-    public int statement(){
+    public double statement(){
         consume();
         return expr();
     }
 
-    private int expr(){
-        int value = div();
+    private double expr(){
+        double value = div();
 
         while (symbol == Token.PLUS || symbol == Token.MINUS){
             switch (symbol) {
@@ -35,8 +35,8 @@ public class Parser {
         return value;
     }
 
-    private int div(){
-        int value = mul();
+    private double div(){
+        double value = mul();
 
         while (symbol == Token.DIV || symbol == Token.REMAINDER){
             switch (symbol) {
@@ -54,8 +54,8 @@ public class Parser {
         return value;
     }
 
-    private int mul(){
-        int value = exponentiation();
+    private double mul(){
+        double value = exponentiation();
 
         while (symbol == Token.MUL) {
             consume();
@@ -65,22 +65,30 @@ public class Parser {
         return value;
     }
 
-    private int exponentiation() {
-        int value = operand();
+    private double exponentiation() {
+        double value = operand();
 
         while (symbol == Token.EXP) {
             consume();
-            value = (int) Math.pow(value, operand());
+            value = Math.pow(value, operand());
         }
 
         return value;
     }
 
-    private int operand(){
-        int value = 0;
+    private double operand(){
+        double value = 0;
 
         switch (symbol) {
-            case NUMBER -> value = digit();
+            case NUMBER -> {
+                value = number();
+                if(symbol == Token.DOT){
+                    consume();
+                    value += number();
+                    if(symbol == Token.DOT)
+                        throw new CalculatorException("Decimals cannot have two dots.");
+                }
+            }
             case LPAR -> {
                 consume();
                 value = expr();
@@ -98,8 +106,8 @@ public class Parser {
         return value;
     }
 
-    private int digit(){
-        int value = lexer.getValue();
+    private double number(){
+        double value = lexer.getValue();
         consume();
 
         return value;
