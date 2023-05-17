@@ -9,7 +9,9 @@ public class CalculatorTests {
     void testLexer_UnknownSymbol_ShouldThrowException(){
         IOException thrown = Assertions.assertThrows(IOException.class, () -> {
             File file = new File("file.txt");
-            file.createNewFile();
+            boolean wasFileCreated = file.createNewFile();
+            if(!wasFileCreated)
+                Assertions.fail();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("?");
             bw.close();
@@ -26,7 +28,9 @@ public class CalculatorTests {
         int value = 0;
         try {
             File file = new File("file.txt");
-            file.createNewFile();
+            boolean wasFileCreated = file.createNewFile();
+            if(!wasFileCreated)
+                Assertions.fail();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("5");
             bw.close();
@@ -55,7 +59,9 @@ public class CalculatorTests {
         Token token = null;
         try {
             File file = new File("file.txt");
-            file.createNewFile();
+            boolean wasFileCreated = file.createNewFile();
+            if(!wasFileCreated)
+                Assertions.fail();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("");
             bw.close();
@@ -83,7 +89,9 @@ public class CalculatorTests {
         int result = 0;
         try {
             File file = new File("file.txt");
-            file.createNewFile();
+            boolean wasFileCreated = file.createNewFile();
+            if(!wasFileCreated)
+                Assertions.fail();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("6/2*3");
             bw.close();
@@ -103,7 +111,9 @@ public class CalculatorTests {
         int result = 0;
         try {
             File file = new File("file.txt");
-            file.createNewFile();
+            boolean wasFileCreated = file.createNewFile();
+            if(!wasFileCreated)
+                Assertions.fail();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("9/3*(-2+5)+1");
             bw.close();
@@ -122,7 +132,9 @@ public class CalculatorTests {
         int result = 0;
         try {
             File file = new File("file.txt");
-            file.createNewFile();
+            boolean wasFileCreated = file.createNewFile();
+            if(!wasFileCreated)
+                Assertions.fail();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             // 2 * (15 / (9 - 24))
             bw.write("(2*(15/((4+5)-(8*(2+1)))))");
@@ -142,7 +154,9 @@ public class CalculatorTests {
         int result = 0;
         try {
             File file = new File("file.txt");
-            file.createNewFile();
+            boolean wasFileCreated = file.createNewFile();
+            if(!wasFileCreated)
+                Assertions.fail();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("24%8*(2+1)");
             bw.close();
@@ -161,7 +175,9 @@ public class CalculatorTests {
         int result = 0;
         try {
             File file = new File("file.txt");
-            file.createNewFile();
+            boolean wasFileCreated = file.createNewFile();
+            if(!wasFileCreated)
+                Assertions.fail();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("24/8%8/3");
             bw.close();
@@ -180,7 +196,9 @@ public class CalculatorTests {
         int result = 0;
         try {
             File file = new File("file.txt");
-            file.createNewFile();
+            boolean wasFileCreated = file.createNewFile();
+            if(!wasFileCreated)
+                Assertions.fail();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("24/6*2^2");
             bw.close();
@@ -198,7 +216,9 @@ public class CalculatorTests {
     void testParser_UnclosedParentheses_ShouldThrowCalculatorException(){
         CalculatorException thrown = Assertions.assertThrows(CalculatorException.class, () -> {
             File file = new File("file.txt");
-            file.createNewFile();
+            boolean wasFileCreated = file.createNewFile();
+            if(!wasFileCreated)
+                Assertions.fail();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("(2*(15/((4+5)-(8*(2+1))))");
             bw.close();
@@ -214,7 +234,9 @@ public class CalculatorTests {
     void testParser_IncompleteExpression_ShouldThrowCalculatorException(){
         CalculatorException thrown = Assertions.assertThrows(CalculatorException.class, () -> {
             File file = new File("file.txt");
-            file.createNewFile();
+            boolean wasFileCreated = file.createNewFile();
+            if(!wasFileCreated)
+                Assertions.fail();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             bw.write("2+5*");
             bw.close();
@@ -231,7 +253,9 @@ public class CalculatorTests {
         int result = 0;
         try {
             File file = new File("file.txt");
-            file.createNewFile();
+            boolean wasFileCreated = file.createNewFile();
+            if(!wasFileCreated)
+                Assertions.fail();
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             // 2 * (15 / (9 - 24))
             bw.write("-(2*(15/((4+5)-(8*(2+1)))))");
