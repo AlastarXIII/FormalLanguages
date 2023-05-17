@@ -38,20 +38,39 @@ public class Parser {
     private int div(){
         int value = mul();
 
-        while (symbol == Token.DIV){
-            consume();
-            value /= mul();
+        while (symbol == Token.DIV || symbol == Token.REMAINDER){
+            switch (symbol) {
+                case DIV -> {
+                    consume();
+                    value /= mul();
+                }
+                case REMAINDER -> {
+                    consume();
+                    value %= mul();
+                }
+            }
         }
 
         return value;
     }
 
     private int mul(){
+        int value = exponentiation();
+
+        while (symbol == Token.MUL) {
+            consume();
+            value *= exponentiation();
+        }
+
+        return value;
+    }
+
+    private int exponentiation() {
         int value = operand();
 
-        while (symbol == Token.MUL){
+        while (symbol == Token.EXP) {
             consume();
-            value *= operand();
+            value = (int) Math.pow(value, operand());
         }
 
         return value;

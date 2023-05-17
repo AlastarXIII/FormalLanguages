@@ -37,6 +37,12 @@ public class Lexer {
             case ')':
                 consume();
                 return Token.RPAR;
+            case '^':
+                consume();
+                return Token.EXP;
+            case '%':
+                consume();
+                return Token.REMAINDER;
             case '1':
             case '2':
             case '3':

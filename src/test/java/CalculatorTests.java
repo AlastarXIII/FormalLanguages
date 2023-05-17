@@ -138,6 +138,63 @@ public class CalculatorTests {
     }
 
     @Test
+    void testParser_RemainderShouldHaveLowerPriorityThanMultiplication(){
+        int result = 0;
+        try {
+            File file = new File("file.txt");
+            file.createNewFile();
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            bw.write("24%8*(2+1)");
+            bw.close();
+            result = new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
+            file.deleteOnExit();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
+        Assertions.assertEquals(0, result, "Inner parentheses don't have the highest priority.");
+    }
+
+    @Test
+    void testParser_RemainderShouldHaveSamePriorityAsDivision(){
+        int result = 0;
+        try {
+            File file = new File("file.txt");
+            file.createNewFile();
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            bw.write("24/8%8/3");
+            bw.close();
+            result = new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
+            file.deleteOnExit();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
+        Assertions.assertEquals(1, result, "Inner parentheses don't have the highest priority.");
+    }
+
+    @Test
+    void testParser_ExponentiationShouldHaveTheHighestPriority(){
+        int result = 0;
+        try {
+            File file = new File("file.txt");
+            file.createNewFile();
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+            bw.write("24/6*2^2");
+            bw.close();
+            result = new Parser(new Lexer(new BufferedReader(new FileReader(file)))).statement();
+            file.deleteOnExit();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+
+        Assertions.assertEquals(1, result, "Inner parentheses don't have the highest priority.");
+    }
+
+    @Test
     void testParser_UnclosedParentheses_ShouldThrowCalculatorException(){
         CalculatorException thrown = Assertions.assertThrows(CalculatorException.class, () -> {
             File file = new File("file.txt");
@@ -150,7 +207,7 @@ public class CalculatorTests {
         });
 
         Assertions.assertNotEquals(null, thrown, "Exception wasn't triggered.");
-        Assertions.assertEquals("No matching parentheses found.", thrown.getMessage(), "Wrong exception was triggered.");
+        Assertions.assertEquals("No matching parenthesis found.", thrown.getMessage(), "Wrong exception was triggered.");
     }
 
     @Test

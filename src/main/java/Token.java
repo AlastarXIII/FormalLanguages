@@ -6,5 +6,7 @@ public enum Token {
     DIV,
     MUL,
     MINUS,
-    PLUS
+    PLUS,
+    EXP,
+    REMAINDER
 }
